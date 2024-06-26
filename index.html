@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Multi-Object Hallucination in Vision-Language Models investigates how models misperceive when tasked with focusing on multiple objects simultaneously.">
+  <meta name="keywords" content="Object Hallucination, LVLMs, Multimodal, Large Vision Language Model, Hallucination">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi-Object Hallucination in Vision-Language Models</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">🔍 Multi-Object Hallucination in Vision-Language Models</h1>
+          <h3 class="title is-4 publication-title">Recognition-based Object Probing Evaluation (ROPE)</h3>
+          <h4 class="title is-size-4 publication-title" style="color: blue;">ALVR @ ACL 2024</h4>
+          <div class="is-size-5 publication-authors">
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Xuweiyi Chen<sup>*,1,2</sup>,</span>
+              <span class="author-block">Ziqiao Ma<sup>*,1</sup>,</span>
+              <span class="author-block">Xuejun Zhang<sup>*,1</sup>,</span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Sihan Xu<sup>1</sup>,</span>
+              <span class="author-block">Shengyi Qian<sup>1,3</sup>,</span>
+              <span class="author-block">David Fouhey<sup>3</sup>,</span>
+              <span class="author-block">Joyce Y. Chai<sup>1</sup></span>
+            </div>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of Michigan <sup>2</sup>University of Virginia <sup>3</sup>New York University</span>
+          </div>
+          <div class="is-size-7 publication-authors">
+            <span class="author-block"><sup>*</sup>Denotes Equal Contribution</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded" style="background-color: grey; color: white;">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Project Page</span>
+                  </a>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/sled-umich/ROPE"
+                      class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        &#129303; 
+                    </span>
+                    <span>Dataset</span>
+                  </a>
+                </span>
+              <span class="link-block">
+                <a href="https://github.com/sled-group/moh"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Multi-Object Hallucination in Vision-Language Models</span> investigates how models misperceive when tasked with focusing on multiple objects simultaneously.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Large vision language models (LVLMs) often suffer from object hallucination, producing objects not present in the given images. While current benchmarks for object hallucination primarily concentrate on the presence of a single object class rather than individual entities, this work systematically investigates multi-object hallucination, examining how models misperceive (e.g., invent nonexistent objects or become distracted) when tasked with focusing on multiple objects simultaneously. We introduce Recognition-based Object Probing Evaluation (ROPE), an automated evaluation protocol that considers the distribution of object classes within a single image during testing and uses visual referring prompts to eliminate ambiguity. With comprehensive empirical studies and analysis of potential factors leading to multi-object hallucination, we found that (1) LVLMs suffer more hallucinations when focusing on multiple objects compared to a single object. (2) The tested object class distribution affects hallucination behaviors, indicating that LVLMs may follow shortcuts and spurious correlations. (3) Hallucinatory behaviors are influenced by data-specific factors, salience and frequency, and model intrinsic behaviors. We hope to enable LVLMs to recognize and reason about multiple objects that often occur in realistic visual scenes, provide insights, and quantify our progress towards mitigating the issues.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Case Study: Comparing ROPE with Existing Benchmarks</h2>
+    <div class="content has-text-justified">
+      <p>
+        A case study that compares our Recognition-based Object Probing Evaluation (ROPE) benchmark with existing benchmarks for object hallucination in GPT-4V. ROPE offers an automated evaluation protocol with controlled output formatting and uses visual prompts to distinctly ground to objects, thus mitigating referential ambiguity. Unlike binary inquiries relying solely on textual descriptions, ROPE challenges the model to identify multiple objects concurrently. We observe that, while GPT-4V can identify the whisk to the left of a knife when prompted about it, the model hallucinates a "fork" when directly tasked to recognize multiple objects.
+      </p>
+      <figure>
+        <img src="./static/images/benchmark.jpg" alt="Comparison of ROPE with Existing Benchmarks">
+        <figcaption>Compare ROPE and Existing Benchmarks  GPT-4V.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Different Instruction Settings of ROPE</h2>
+    <div class="content has-text-justified">
+      <p>
+        Different types of instruction settings of ROPE. In a single turn of prompting without format enforcement, we probe the model to recognize the 5 objects referred to by the visual prompts <strong>(a)</strong> one at a time in the <strong>single-object</strong> setting and <strong>(b)</strong> concurrently in the <strong>multi-object</strong> setting. We further enforce the model to follow the format template and decode only the object tokens for each of the five objects <strong>(c)</strong> without output manipulation in <strong>student forcing</strong> and <strong>(d)</strong> replacing all previously generated object tokens with the ground truth classes in <strong>teacher forcing</strong>.
+      </p>
+      <figure>
+        <img src="./static/images/prompting.jpg" alt="Different Instruction Settings of ROPE">
+        <figcaption>Different Instruction Settings of ROPE</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Evaluation Results</h2>
+    <div class="content has-text-justified">
+      <table class="table is-striped is-bordered is-fullwidth">
+        <thead>
+          <tr>
+            <th rowspan="2">Model</th>
+            <th colspan="3">Default Multi-Object</th>
+            <th colspan="3">Student-Forcing</th>
+            <th colspan="3">Teacher-Forcing</th>
+            <th colspan="3">Single-Object</th>
+          </tr>
+          <tr>
+            <th>Wild</th>
+            <th>Hom.</th>
+            <th>Het.</th>
+            <th>Wild</th>
+            <th>Hom.</th>
+            <th>Het.</th>
+            <th>Wild</th>
+            <th>Hom.</th>
+            <th>Het.</th>
+            <th>Wild</th>
+            <th>Hom.</th>
+            <th>Het.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: #C9DAF8;">
+            <td colspan="13"><em>Seen</em></td>
+          </tr>
+          <tr>
+            <td>LLaVA-7B</td>
+            <td>31.29</td>
+            <td>67.50</td>
+            <td>8.00</td>
+            <td>31.28</td>
+            <td>67.25</td>
+            <td>11.22</td>
+            <td>31.49</td>
+            <td>92.15</td>
+            <td>12.37</td>
+            <td>35.32</td>
+            <td>62.35</td>
+            <td>17.37</td>
+          </tr>
+          <tr>
+            <td>LLaVA-13B</td>
+            <td>31.54</td>
+            <td>67.63</td>
+            <td>12.64</td>
+            <td>31.49</td>
+            <td>73.25</td>
+            <td>11.54</td>
+            <td>34.97</td>
+            <td>94.25</td>
+            <td>16.03</td>
+            <td>43.13</td>
+            <td>80.60</td>
+            <td>23.91</td>
+          </tr>
+          <tr>
+            <td>LLaVA-34B</td>
+            <td>37.70</td>
+            <td>79.67</td>
+            <td>18.55</td>
+            <td><strong>34.00</strong></td>
+            <td><strong>79.18</strong></td>
+            <td><strong>19.17</strong></td>
+            <td><strong>37.32</strong></td>
+            <td><strong>94.26</strong></td>
+            <td><strong>22.47</strong></td>
+            <td>55.05</td>
+            <td><strong>86.50</strong></td>
+            <td>18.97</td>
+          </tr>
+          <tr>
+            <td>CogVLM</td>
+            <td><u>0.04</u></td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.10</td>
+            <td>0.95</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+          </tr>
+          <tr>
+            <td>CogVLM-C</td>
+            <td><u>12.89</u></td>
+            <td>22.75</td>
+            <td>7.18</td>
+            <td>25.37</td>
+            <td>43.63</td>
+            <td>12.03</td>
+            <td>28.25</td>
+            <td>72.80</td>
+            <td>17.50</td>
+            <td>30.16</td>
+            <td>56.00</td>
+            <td>16.35</td>
+          </tr>
+          <tr>
+            <td>CogVLM-G</td>
+            <td><u>0.00</u></td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>9.86</td>
+            <td>13.50</td>
+            <td>6.79</td>
+            <td>22.64</td>
+            <td>75.45</td>
+            <td>0.45</td>
+            <td>11.25</td>
+            <td>22.65</td>
+            <td>7.12</td>
+          </tr>
+          <tr>
+            <td>QwenVL</td>
+            <td><u>2.73</u></td>
+            <td>6.60</td>
+            <td>1.03</td>
+            <td>6.25</td>
+            <td>16.00</td>
+            <td>3.65</td>
+            <td>18.74</td>
+            <td>71.50</td>
+            <td>5.45</td>
+            <td>8.73</td>
+            <td>16.05</td>
+            <td>5.58</td>
+          </tr>
+          <tr>
+            <td>QwenVL-C</td>
+            <td><u>8.72</u></td>
+            <td>16.90</td>
+            <td>6.67</td>
+            <td>5.26</td>
+            <td>8.60</td>
+            <td>4.10</td>
+            <td>12.11</td>
+            <td>47.75</td>
+            <td>8.08</td>
+            <td>25.99</td>
+            <td>43.40</td>
+            <td>13.21</td>
+          </tr>
+          <tr>
+            <td>IDEFICS</td>
+            <td><u>0.00</u></td>
+            <td>1.45</td>
+            <td>0.13</td>
+            <td>6.25</td>
+            <td>18.70</td>
+            <td>0.64</td>
+            <td>17.37</td>
+            <td>76.15</td>
+            <td>10.06</td>
+            <td>4.62</td>
+            <td>0.00</td>
+            <td>0.32</td>
+          </tr>
+          <tr>
+            <td>GPT-4V</td>
+            <td>53.80</td>
+            <td>77.55</td>
+            <td>40.83</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td>55.89</td>
+            <td>78.25</td>
+            <td>41.03</td>
+          </tr>
+          <tr>
+            <td>GPT-4O</td>
+            <td><strong>71.27</strong></td>
+            <td><strong>89.25</strong></td>
+            <td><strong>66.03</strong></td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td><strong>60.77</strong></td>
+            <td>73.92</td>
+            <td><strong>54.31</strong></td>
+          </tr>
+          <tr style="background-color: #C9DAF8;">
+            <td colspan="13"><em>Unseen</em></td>
+          </tr>
+          <tr>
+            <td>LLaVA-7B</td>
+            <td>30.56</td>
+            <td>68.12</td>
+            <td>10.33</td>
+            <td>30.55</td>
+            <td>68.16</td>
+            <td>10.24</td>
+            <td>31.89</td>
+            <td>90.33</td>
+            <td>13.25</td>
+            <td>34.88</td>
+            <td>64.41</td>
+            <td>16.18</td>
+          </tr>
+          <tr>
+            <td>LLaVA-13B</td>
+            <td>27.56</td>
+            <td>63.10</td>
+            <td>8.37</td>
+            <td>27.41</td>
+            <td>63.10</td>
+            <td>8.37</td>
+            <td>35.65</td>
+            <td>91.09</td>
+            <td>14.80</td>
+            <td>42.66</td>
+            <td>71.92</td>
+            <td>23.41</td>
+          </tr>
+          <tr>
+            <td>LLaVA-34B</td>
+            <td>29.53</td>
+            <td>68.71</td>
+            <td>16.83</td>
+            <td><strong>29.45</strong></td>
+            <td><strong>91.18</strong></td>
+            <td><strong>14.23</strong></td>
+            <td><strong>36.32</strong></td>
+            <td><strong>95.51</strong></td>
+            <td><strong>17.92</strong></td>
+            <td>46.16</td>
+            <td><strong>84.76</strong></td>
+            <td>32.44</td>
+          </tr>
+          <tr>
+            <td>CogVLM</td>
+            <td>0.03</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.15</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+          </tr>
+          <tr>
+            <td>CogVLM-C</td>
+            <td>15.56</td>
+            <td>26.57</td>
+            <td>5.53</td>
+            <td>17.18</td>
+            <td>41.27</td>
+            <td>6.02</td>
+            <td>22.81</td>
+            <td>56.04</td>
+            <td>6.67</td>
+            <td>30.56</td>
+            <td>52.00</td>
+            <td>13.50</td>
+          </tr>
+          <tr>
+            <td>CogVLM-G</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>8.20</td>
+            <td>1.47</td>
+            <td>5.77</td>
+            <td>23.82</td>
+            <td>81.20</td>
+            <td>1.81</td>
+            <td>10.32</td>
+            <td>10.74</td>
+            <td>9.11</td>
+          </tr>
+          <tr>
+            <td>QwenVL</td>
+            <td>2.80</td>
+            <td>1.95</td>
+            <td>7.06</td>
+            <td>7.17</td>
+            <td>16.41</td>
+            <td>4.15</td>
+            <td>10.34</td>
+            <td>58.00</td>
+            <td>4.07</td>
+            <td>17.73</td>
+            <td>31.22</td>
+            <td>9.51</td>
+          </tr>
+          <tr>
+            <td>QwenVL-C</td>
+            <td>18.86</td>
+            <td>30.73</td>
+            <td>8.78</td>
+            <td>16.16</td>
+            <td>27.80</td>
+            <td>7.72</td>
+            <td>21.81</td>
+            <td>58.00</td>
+            <td>11.14</td>
+            <td>34.20</td>
+            <td>57.31</td>
+            <td>15.37</td>
+          </tr>
+          <tr>
+            <td>IDEFICS</td>
+            <td>0.39</td>
+            <td>0.37</td>
+            <td>0.33</td>
+            <td>9.03</td>
+            <td>24.45</td>
+            <td>2.68</td>
+            <td>24.80</td>
+            <td>83.02</td>
+            <td>7.64</td>
+            <td>4.62</td>
+            <td>3.67</td>
+            <td>6.50</td>
+          </tr>
+          <tr>
+            <td>GPT-4V</td>
+            <td>45.46</td>
+            <td>63.12</td>
+            <td>34.17</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td>47.34</td>
+            <td>64.94</td>
+            <td>35.45</td>
+          </tr>
+          <tr>
+            <td>GPT-4O</td>
+            <td><strong>63.27</strong></td>
+            <td><strong>80.29</strong></td>
+            <td><strong>54.47</strong></td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td colspan="3" class="has-text-grey">N/A</td>
+            <td><strong>63.45</strong></td>
+            <td>79.84</td>
+            <td><strong>53.74</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="has-text-centered"><em>Averaged accuracy of baselines on the <strong>In-the-Wild</strong>, <strong>Homogeneous</strong>, and <strong>Heterogeneous</strong> splits of ROPE. Student/teacher forcing doesn't apply to the GPT models as they are API-only.</em></p>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Citation</h2>
+    <pre><code>@misc{xuweiyi2024multiobjecthallucination,
+      title={Multi-Object Hallucination in Vision-Language Models}, 
+      author={Xuweiyi Chen and Ziqiao Ma and Xuejun Zhang and Sihan Xu and Shengyi Qian and David Fouhey and Joyce Y. Chai},
+      year={2024},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/sled-group/multi-object-hallucination" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>, licensed
+            under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
